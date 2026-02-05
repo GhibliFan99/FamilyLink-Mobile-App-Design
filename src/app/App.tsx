@@ -10,6 +10,7 @@ import { ChatScreen } from './pages/ChatScreen';
 import { contacts as initialContacts, Contact } from './data/contacts';
 import clsx from 'clsx';
 import { Toaster, toast } from 'sonner';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const AppContent = () => {
   const { highContrast } = useAccessibility();
@@ -212,6 +213,7 @@ const AppContent = () => {
             </main>
         </div>
         <Toaster position="top-center" />
+        <SpeedInsights />
     </div>
   );
 };
