@@ -69,64 +69,64 @@ const AppContent = () => {
   };
 
   const handleVoiceCommand = (cmd: string) => {
-     const lowerCmd = cmd.toLowerCase().trim();
-     
-     // Handle navigation commands
-     if (lowerCmd === 'go to home' || lowerCmd === 'home') {
-       setCurrentView('home');
-       setLastView('home');
-       toast.success('Going to Home');
-       return;
-     }
-     
-     if (lowerCmd === 'go to settings' || lowerCmd === 'settings') {
-       setCurrentView('settings');
-       setLastView('home');
-       toast.success('Going to Settings');
-       return;
-     }
-     
-     // Handle contact-related commands (call/message)
-     let foundContact: Contact | null = null;
+    const lowerCmd = cmd.toLowerCase().trim();
 
-     // Search by name
-     for (const contact of allContacts) {
-       if (lowerCmd.includes(contact.name.toLowerCase())) {
-         foundContact = contact;
-         break;
-       }
-     }
+    // Handle navigation commands
+    if (lowerCmd === 'go to home' || lowerCmd === 'home') {
+      setCurrentView('home');
+      setLastView('home');
+      toast.success('Going to Home');
+      return;
+    }
 
-     // Search by relation if no name match
-     if (!foundContact) {
-       for (const contact of allContacts) {
-         if (lowerCmd.includes(contact.relation.toLowerCase())) {
-           foundContact = contact;
-           break;
-         }
-       }
-     }
+    if (lowerCmd === 'go to settings' || lowerCmd === 'settings') {
+      setCurrentView('settings');
+      setLastView('home');
+      toast.success('Going to Settings');
+      return;
+    }
 
-     if (foundContact) {
-       setActiveContact(foundContact);
-       if (lowerCmd.includes('call') && lowerCmd.includes('video')) {
-         setCurrentView('video');
-         toast.success(`Video calling ${foundContact.name}`);
-       } else if (lowerCmd.includes('call')) {
-         setCurrentView('call');
-         toast.success(`Calling ${foundContact.name}`);
-       } else if (lowerCmd.includes('message') || lowerCmd.includes('text')) {
-         setCurrentView('chat');
-         toast.success(`Messaging ${foundContact.name}`);
-       } else {
-         toast.info("Command recognized: " + cmd);
-         setCurrentView(lastView);
-       }
-     } else {
-       // No matching contact found — only allow navigation commands already handled above
-       toast.error('Contact not found');
-       setCurrentView(lastView);
-     }
+    // Handle contact-related commands (call/message)
+    let foundContact: Contact | null = null;
+
+    // Search by name
+    for (const contact of allContacts) {
+      if (lowerCmd.includes(contact.name.toLowerCase())) {
+        foundContact = contact;
+        break;
+      }
+    }
+
+    // Search by relation if no name match
+    if (!foundContact) {
+      for (const contact of allContacts) {
+        if (lowerCmd.includes(contact.relation.toLowerCase())) {
+          foundContact = contact;
+          break;
+        }
+      }
+    }
+
+    if (foundContact) {
+      setActiveContact(foundContact);
+      if (lowerCmd.includes('call') && lowerCmd.includes('video')) {
+        setCurrentView('video');
+        toast.success(`Video calling ${foundContact.name}`);
+      } else if (lowerCmd.includes('call')) {
+        setCurrentView('call');
+        toast.success(`Calling ${foundContact.name}`);
+      } else if (lowerCmd.includes('message') || lowerCmd.includes('text')) {
+        setCurrentView('chat');
+        toast.success(`Messaging ${foundContact.name}`);
+      } else {
+        toast.info("Command recognized: " + cmd);
+        setCurrentView(lastView);
+      }
+    } else {
+      // No matching contact found — only allow navigation commands already handled above
+      toast.error('Contact not found');
+      setCurrentView(lastView);
+    }
   };
 
   const getVoiceGuideText = () => {
@@ -152,66 +152,54 @@ const AppContent = () => {
   return (
     <div
       className={clsx(
-        'min-h-screen w-full flex items-center justify-center p-4',
-        'bg-stone-200' // Desktop background
+        'min-h-screen w-full flex flex-col transition-colors duration-300',
+        highContrast ? 'bg-black' : 'bg-white'
       )}
     >
-        {/* Smartphone Frame Container */}
-        <div
-            className={clsx(
-                'relative w-full max-w-sm h-[850px] shadow-2xl rounded-[3rem] border-[12px] overflow-hidden flex flex-col transition-colors duration-300',
-                 highContrast ? 'border-gray-800 bg-black' : 'border-gray-900 bg-white' 
-            )}
-        >
-            {/* Notch / Dynamic Island */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-black rounded-b-2xl z-50 pointer-events-none" />
-
-            {/* Main Content Area */}
-            <main className="flex-1 overflow-hidden relative flex flex-col h-full pt-8"> 
-                {/* pt-8 pushes content below notch */}
-                <div className="flex-1 overflow-y-auto scrollbar-hide relative">
-                     {currentView === 'home' && (
-                        <HomeScreen
-                            contacts={allContacts}
-                            onCall={handleCall}
-                            onVideoCall={handleVideoCall}
-                            onMessage={handleMessage}
-                            onAddContact={handleAddContact}
-                            onDeleteContact={handleDeleteContact}
-                        />
-                    )}
-                    {currentView === 'settings' && <SettingsScreen />}
-                    {currentView === 'voice' && (
-                        <VoiceCommandScreen
-                            onCommand={handleVoiceCommand}
-                            onCancel={() => setCurrentView(lastView)}
-                        />
-                    )}
-                    {(currentView === 'call' || currentView === 'video') && activeContact && (
-                        <CallScreen
-                            contact={activeContact}
-                            mode={currentView === 'video' ? 'video' : 'voice'}
-                            onEndCall={handleEndCall}
-                        />
-                    )}
-                    {currentView === 'chat' && activeContact && (
-                        <ChatScreen 
-                            contact={activeContact}
-                            onBack={() => setCurrentView('home')}
-                        />
-                    )}
-                </div>
-            
-                {/* Bottom Section (Fixed) */}
-                {!isFullscreenView && currentView !== 'chat' && (
-                    <div className="flex-none z-40 bg-inherit pb-2">
-                        <VoiceGuide text={getVoiceGuideText()} />
-                        <BottomNav currentTab={currentView} onNavigate={handleNavigate} />
-                    </div>
-                )}
-            </main>
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-hidden relative flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto scrollbar-hide relative">
+          {currentView === 'home' && (
+            <HomeScreen
+              contacts={allContacts}
+              onCall={handleCall}
+              onVideoCall={handleVideoCall}
+              onMessage={handleMessage}
+              onAddContact={handleAddContact}
+              onDeleteContact={handleDeleteContact}
+            />
+          )}
+          {currentView === 'settings' && <SettingsScreen />}
+          {currentView === 'voice' && (
+            <VoiceCommandScreen
+              onCommand={handleVoiceCommand}
+              onCancel={() => setCurrentView(lastView)}
+            />
+          )}
+          {(currentView === 'call' || currentView === 'video') && activeContact && (
+            <CallScreen
+              contact={activeContact}
+              mode={currentView === 'video' ? 'video' : 'voice'}
+              onEndCall={handleEndCall}
+            />
+          )}
+          {currentView === 'chat' && activeContact && (
+            <ChatScreen
+              contact={activeContact}
+              onBack={() => setCurrentView('home')}
+            />
+          )}
         </div>
-        <Toaster position="top-center" />
+
+        {/* Bottom Section (Fixed) */}
+        {!isFullscreenView && currentView !== 'chat' && (
+          <div className="flex-none z-40 bg-inherit pb-2">
+            <VoiceGuide text={getVoiceGuideText()} />
+            <BottomNav currentTab={currentView} onNavigate={handleNavigate} />
+          </div>
+        )}
+      </main>
+      <Toaster position="top-center" />
     </div>
   );
 };
