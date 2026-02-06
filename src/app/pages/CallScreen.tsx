@@ -35,66 +35,66 @@ export const CallScreen = ({ contact, mode, onEndCall }: CallScreenProps) => {
   // Video Mode Layout
   if (mode === 'video') {
     return (
-      <div className="relative h-full w-full bg-black overflow-hidden flex flex-col">
+      <div className="fixed inset-0 w-full h-full bg-black overflow-hidden z-50 flex flex-col">
         {/* Main Video (The Contact) */}
         <div className="absolute inset-0 z-0">
-           <ImageWithFallback
-              src={contact.image}
-              alt={contact.name}
-              className="w-full h-full object-cover opacity-90"
-            />
-            {/* Overlay Gradient for controls visibility */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+          <ImageWithFallback
+            src={contact.image}
+            alt={contact.name}
+            className="w-full h-full object-cover opacity-90"
+          />
+          {/* Overlay Gradient for controls visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
         </div>
 
         {/* Self View (Me) */}
         {!isVideoOff && (
-            <div className="absolute top-4 right-4 z-20 w-32 h-44 rounded-xl border-2 border-white overflow-hidden shadow-2xl bg-gray-800">
-                 <ImageWithFallback
-                    src="https://images.unsplash.com/photo-1654857260001-c4bcddda4942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW5pb3IlMjBtYW4lMjBzZWxmaWUlMjBsb29raW5nJTIwYXQlMjBjYW1lcmF8ZW58MXx8fHwxNzY5ODc5MjI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                    alt="Me"
-                    className="w-full h-full object-cover scale-x-[-1]" // Mirror effect
-                />
-            </div>
+          <div className="absolute top-4 right-4 z-20 w-32 h-44 rounded-xl border-2 border-white overflow-hidden shadow-2xl bg-gray-800">
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1654857260001-c4bcddda4942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW5pb3IlMjBtYW4lMjBzZWxmaWUlMjBsb29raW5nJTIwYXQlMjBjYW1lcmF8ZW58MXx8fHwxNzY5ODc5MjI0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+              alt="Me"
+              className="w-full h-full object-cover scale-x-[-1]" // Mirror effect
+            />
+          </div>
         )}
 
         {/* Header Info */}
         <div className="absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white pointer-events-none">
-             <h2 className="font-bold drop-shadow-md" style={{ fontSize: `${32 * textSize}px` }}>{contact.name}</h2>
-             <p className="font-medium drop-shadow-md opacity-90">{formatTime(duration)}</p>
+          <h2 className="font-bold drop-shadow-md" style={{ fontSize: `${32 * textSize}px` }}>{contact.name}</h2>
+          <p className="font-medium drop-shadow-md opacity-90">{formatTime(duration)}</p>
         </div>
 
         {/* Controls (Bottom) */}
         <div className="relative z-10 mt-auto pb-8 flex items-center justify-center gap-6">
-            <button
-                onClick={() => setIsMuted(!isMuted)}
-                className={clsx(
-                'rounded-full p-4 transition-all shadow-lg flex items-center justify-center backdrop-blur-md',
-                isMuted ? 'bg-white text-black' : 'bg-black/40 text-white border border-white/30'
-                )}
-                style={{ width: `${60 * buttonSize}px`, height: `${60 * buttonSize}px` }}
-            >
-                {isMuted ? <MicOff size={iconSize} /> : <Mic size={iconSize} />}
-            </button>
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            className={clsx(
+              'rounded-full p-4 transition-all shadow-lg flex items-center justify-center backdrop-blur-md',
+              isMuted ? 'bg-white text-black' : 'bg-black/40 text-white border border-white/30'
+            )}
+            style={{ width: `${60 * buttonSize}px`, height: `${60 * buttonSize}px` }}
+          >
+            {isMuted ? <MicOff size={iconSize} /> : <Mic size={iconSize} />}
+          </button>
 
-            <button
-                onClick={() => onEndCall(duration)}
-                className="rounded-full p-4 shadow-xl flex items-center justify-center bg-red-600 text-white hover:bg-red-700 active:scale-95"
-                style={{ width: `${80 * buttonSize}px`, height: `${80 * buttonSize}px` }}
-            >
-                <PhoneOff size={iconSize * 1.2} />
-            </button>
+          <button
+            onClick={() => onEndCall(duration)}
+            className="rounded-full p-4 shadow-xl flex items-center justify-center bg-red-600 text-white hover:bg-red-700 active:scale-95"
+            style={{ width: `${80 * buttonSize}px`, height: `${80 * buttonSize}px` }}
+          >
+            <PhoneOff size={iconSize * 1.2} />
+          </button>
 
-            <button
-                onClick={() => setIsVideoOff(!isVideoOff)}
-                className={clsx(
-                'rounded-full p-4 transition-all shadow-lg flex items-center justify-center backdrop-blur-md',
-                isVideoOff ? 'bg-white text-black' : 'bg-black/40 text-white border border-white/30'
-                )}
-                style={{ width: `${60 * buttonSize}px`, height: `${60 * buttonSize}px` }}
-            >
-                {isVideoOff ? <VideoOff size={iconSize} /> : <Video size={iconSize} />}
-            </button>
+          <button
+            onClick={() => setIsVideoOff(!isVideoOff)}
+            className={clsx(
+              'rounded-full p-4 transition-all shadow-lg flex items-center justify-center backdrop-blur-md',
+              isVideoOff ? 'bg-white text-black' : 'bg-black/40 text-white border border-white/30'
+            )}
+            style={{ width: `${60 * buttonSize}px`, height: `${60 * buttonSize}px` }}
+          >
+            {isVideoOff ? <VideoOff size={iconSize} /> : <Video size={iconSize} />}
+          </button>
         </div>
       </div>
     );
@@ -104,11 +104,11 @@ export const CallScreen = ({ contact, mode, onEndCall }: CallScreenProps) => {
   return (
     <div
       className={clsx(
-        'flex flex-col h-full items-center pt-12 pb-8 px-6 transition-colors duration-300',
+        'flex flex-col h-full items-center justify-center pt-12 pb-8 px-6 transition-colors duration-300',
         highContrast ? 'bg-black text-white' : 'bg-gray-50 text-gray-900'
       )}
     >
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm gap-8">
+      <div className="flex-1 flex flex-col items-center justify-center w-full gap-8">
         {/* Status */}
         <div className="text-center">
           <p
@@ -128,11 +128,11 @@ export const CallScreen = ({ contact, mode, onEndCall }: CallScreenProps) => {
         {/* Contact Info */}
         <div className="flex flex-col items-center gap-4">
           <div className="w-48 h-48 rounded-full overflow-hidden border-8 border-gray-200 shadow-xl relative">
-             <ImageWithFallback
-                src={contact.image}
-                alt={contact.name}
-                className="w-full h-full object-cover"
-              />
+            <ImageWithFallback
+              src={contact.image}
+              alt={contact.name}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="text-center">
             <h2 className="font-bold" style={{ fontSize: `${32 * textSize}px` }}>{contact.name}</h2>
@@ -169,7 +169,7 @@ export const CallScreen = ({ contact, mode, onEndCall }: CallScreenProps) => {
               highContrast ? 'bg-red-900 text-red-200 border-2 border-red-500' : 'bg-red-500 text-white'
             )}
             style={{ width: `${80 * buttonSize}px`, height: `${80 * buttonSize}px` }}
-             aria-label="End Call"
+            aria-label="End Call"
           >
             <PhoneOff size={iconSize * 1.2} />
           </button>

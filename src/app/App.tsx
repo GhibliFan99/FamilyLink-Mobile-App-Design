@@ -152,46 +152,54 @@ const AppContent = () => {
   return (
     <div
       className={clsx(
-        'min-h-screen w-full flex flex-col transition-colors duration-300',
+        'h-screen w-full flex flex-col overflow-hidden transition-colors duration-300',
         highContrast ? 'bg-black' : 'bg-white'
       )}
     >
       {/* Main Content Area */}
       <main className="flex-1 overflow-hidden relative flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto scrollbar-hide relative">
-          {currentView === 'home' && (
-            <HomeScreen
-              contacts={allContacts}
-              onCall={handleCall}
-              onVideoCall={handleVideoCall}
-              onMessage={handleMessage}
-              onAddContact={handleAddContact}
-              onDeleteContact={handleDeleteContact}
-            />
-          )}
-          {currentView === 'settings' && <SettingsScreen />}
-          {currentView === 'voice' && (
-            <VoiceCommandScreen
-              onCommand={handleVoiceCommand}
-              onCancel={() => setCurrentView(lastView)}
-            />
-          )}
-          {(currentView === 'call' || currentView === 'video') && activeContact && (
-            <CallScreen
-              contact={activeContact}
-              mode={currentView === 'video' ? 'video' : 'voice'}
-              onEndCall={handleEndCall}
-            />
-          )}
-          {currentView === 'chat' && activeContact && (
-            <ChatScreen
-              contact={activeContact}
-              onBack={() => setCurrentView('home')}
-            />
-          )}
-        </div>
 
-        {/* Bottom Section (Fixed) */}
+        {/* Fullscreen Views (No Scroll) */}
+        {currentView === 'voice' && (
+          <VoiceCommandScreen
+            onCommand={handleVoiceCommand}
+            onCancel={() => setCurrentView(lastView)}
+          />
+        )}
+
+        {(currentView === 'call' || currentView === 'video') && activeContact && (
+          <CallScreen
+            contact={activeContact}
+            mode={currentView === 'video' ? 'video' : 'voice'}
+            onEndCall={handleEndCall}
+          />
+        )}
+
+        {currentView === 'chat' && activeContact && (
+          <ChatScreen
+            contact={activeContact}
+            onBack={() => setCurrentView('home')}
+          />
+        )}
+
+        {/* Scrollable Views (Home, Settings) */}
+        {!isFullscreenView && currentView !== 'chat' && (
+          <div className="flex-1 overflow-y-auto scrollbar-hide relative">
+            {currentView === 'home' && (
+              <HomeScreen
+                contacts={allContacts}
+                onCall={handleCall}
+                onVideoCall={handleVideoCall}
+                onMessage={handleMessage}
+                onAddContact={handleAddContact}
+                onDeleteContact={handleDeleteContact}
+              />
+            )}
+            {currentView === 'settings' && <SettingsScreen />}
+          </div>
+        )}
+
+        {/* Bottom Section (Fixed) - Only show when NOT in fullscreen & NOT in chat */}
         {!isFullscreenView && currentView !== 'chat' && (
           <div className="flex-none z-40 bg-inherit pb-2">
             <VoiceGuide text={getVoiceGuideText()} />

@@ -38,7 +38,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
 
   const handleSend = () => {
     if (!inputText.trim()) return;
-    
+
     const newMessage: Message = {
       id: Date.now().toString(),
       text: inputText,
@@ -85,7 +85,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
         const trimmed = final.trim();
         // If user only said "send" -> send the currently composed input and stop listening
         if (/^send( message| it)?$/i.test(trimmed)) {
-          try { recognitionRef.current?.stop(); } catch (e) {}
+          try { recognitionRef.current?.stop(); } catch (e) { }
           setListening(false);
           setTimeout(() => { handleSend(); }, 120);
           return;
@@ -95,7 +95,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
         if (trailing && trailing[1]) {
           const messageText = trailing[1].trim();
           setInputText(messageText);
-          try { recognitionRef.current?.stop(); } catch (e) {}
+          try { recognitionRef.current?.stop(); } catch (e) { }
           setListening(false);
           setTimeout(() => { handleSend(); }, 120);
           return;
@@ -109,7 +109,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
     recognitionRef.current = recog;
 
     return () => {
-      try { recog.stop(); } catch (e) {}
+      try { recog.stop(); } catch (e) { }
       recognitionRef.current = null;
     };
   }, []);
@@ -118,7 +118,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
     const recog = recognitionRef.current;
     if (!recog) return;
     if (listening) {
-      try { recog.stop(); } catch (e) {}
+      try { recog.stop(); } catch (e) { }
       setListening(false);
     } else {
       try { recog.start(); setListening(true); } catch (e) { setListening(false); }
@@ -126,13 +126,13 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
   };
 
   return (
-    <div className={clsx('flex flex-col h-full', highContrast ? 'bg-gray-900 text-white' : 'bg-gray-50')}>
+    <div className={clsx('fixed inset-0 z-50 flex flex-col', highContrast ? 'bg-gray-900 text-white' : 'bg-gray-50')}>
       {/* Header */}
       <div className={clsx(
         'p-4 flex items-center gap-4 shadow-sm z-10',
         highContrast ? 'bg-gray-900 text-white border-b border-gray-800' : 'bg-white text-gray-900 border-b border-gray-200'
       )}>
-        <button 
+        <button
           onClick={onBack}
           className="p-2 rounded-full hover:bg-gray-100 transition-colors"
         >
@@ -140,11 +140,11 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
         </button>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200">
-             <ImageWithFallback
-                src={contact.image}
-                alt={contact.name}
-                className="w-full h-full object-cover"
-              />
+            <ImageWithFallback
+              src={contact.image}
+              alt={contact.name}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <h2 className="font-bold" style={{ fontSize: `${20 * textSize}px` }}>{contact.name}</h2>
@@ -160,7 +160,7 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
             key={msg.id}
             className={clsx(
               'max-w-[80%] p-4 rounded-2xl',
-              msg.sender === 'me' 
+              msg.sender === 'me'
                 ? (highContrast ? 'bg-gray-700 text-white self-end rounded-br-none' : 'bg-blue-600 text-white self-end rounded-br-none')
                 : (highContrast ? 'bg-gray-800 text-white self-start rounded-bl-none border border-white' : 'bg-white text-gray-800 self-start rounded-bl-none shadow-sm')
             )}
@@ -182,10 +182,10 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
           <button
             key={reply}
             onClick={() => setInputText(reply)}
-              className={clsx(
+            className={clsx(
               'px-4 py-2 rounded-full whitespace-nowrap font-medium border-2',
-              highContrast 
-                ? 'bg-black border-gray-800 text-white' 
+              highContrast
+                ? 'bg-black border-gray-800 text-white'
                 : 'bg-white border-blue-200 text-blue-600'
             )}
             style={{ fontSize: `${16 * textSize}px` }}
@@ -205,22 +205,22 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
         'p-4 border-t flex items-center gap-3',
         highContrast ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'
       )}>
-          <button className={clsx('p-3 rounded-full flex-shrink-0', highContrast ? 'bg-gray-800 text-white' : 'bg-gray-100 text-blue-600')}>
-            <ImageIcon size={28 * buttonSize} />
-          </button>
+        <button className={clsx('p-3 rounded-full flex-shrink-0', highContrast ? 'bg-gray-800 text-white' : 'bg-gray-100 text-blue-600')}>
+          <ImageIcon size={28 * buttonSize} />
+        </button>
 
-          <button
-           onClick={toggleListening}
-           aria-pressed={listening}
-           className={clsx(
+        <button
+          onClick={toggleListening}
+          aria-pressed={listening}
+          className={clsx(
             'p-3 rounded-full flex-shrink-0 transition-colors',
             listening ? 'bg-red-500 text-white animate-pulse' : (highContrast ? 'bg-gray-800 text-white' : 'bg-gray-100 text-blue-600')
-           )}
-           title={listening ? 'Listening... say your message or say "send"' : 'Dictate message (voice)'}
-          >
-            <Mic size={28 * buttonSize} />
-          </button>
-        
+          )}
+          title={listening ? 'Listening... say your message or say "send"' : 'Dictate message (voice)'}
+        >
+          <Mic size={28 * buttonSize} />
+        </button>
+
         <input
           type="text"
           value={inputText}
@@ -228,8 +228,8 @@ export const ChatScreen = ({ contact, onBack }: ChatScreenProps) => {
           placeholder="Type a message..."
           className={clsx(
             'flex-1 min-w-0 p-4 rounded-full outline-none border-2 transition-colors',
-            highContrast 
-              ? 'bg-black border-gray-800 text-white placeholder-gray-500 focus:border-white' 
+            highContrast
+              ? 'bg-black border-gray-800 text-white placeholder-gray-500 focus:border-white'
               : 'bg-gray-100 border-transparent text-gray-900 placeholder-gray-500 focus:bg-white focus:border-blue-500'
           )}
           style={{ fontSize: `${18 * textSize}px` }}
